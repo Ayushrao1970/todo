@@ -12,6 +12,7 @@ func main() {
 	Args := os.Args
 
 	t := TodoList{}
+	t.File = "db.json"
 	if err := t.Load(); err != nil {
 		fmt.Println(err)
 		return

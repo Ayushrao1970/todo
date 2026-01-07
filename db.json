@@ -1,26 +1,14 @@
 [
 {
 "id": 1,
-"task": "write unit test for todo",
-"time": "2026-01-08T01:27:31.115552+05:30",
+"task": "task 1",
+"time": "2026-01-08T02:09:05.816229+05:30",
 "check": ""
 },
 {
 "id": 2,
-"task": "start with pattern",
-"time": "2026-01-08T01:29:54.098547+05:30",
-"check": ""
-},
-{
-"id": 3,
-"task": "apply to GSOC for me",
-"time": "2026-01-08T01:32:52.992711+05:30",
-"check": "Done"
-},
-{
-"id": 4,
-"task": "get a job",
-"time": "2026-01-08T01:28:35.37571+05:30",
+"task": "task 2",
+"time": "2026-01-08T02:09:05.816281+05:30",
 "check": ""
 }
 ]

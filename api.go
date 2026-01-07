@@ -10,6 +10,7 @@ import (
 
 type TodoList struct {
 	List []Todo `json:"list"`
+	File string
 }
 
 type Todo struct {
@@ -72,13 +73,13 @@ func (t *TodoList) Update(i int, task string) {
 func (t *TodoList) Save() {
 	b, _ := json.MarshalIndent(t.List, "", "")
 
-	os.WriteFile("db.json", b, 0644) // we create the file here
+	os.WriteFile(t.File, b, 0644) // we create the file here
 
 }
 
 func (t *TodoList) Load() error {
 
-	data, err := os.ReadFile("db.json")
+	data, err := os.ReadFile(t.File)
 
 	if err != nil {
 		if os.IsNotExist(err) { // if file doesn't exist then we create the todolist
