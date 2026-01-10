@@ -1,10 +1,11 @@
-package main
+package api
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
 	"slices"
+	"strings"
 	"time"
 )
 
@@ -21,25 +22,37 @@ type Todo struct {
 }
 
 func (t *TodoList) Check(i int) {
-	if t.List[i].Check == "" {
+	i = i - 1
+	if t.List[i].Check == "Pending" || t.List[i].Check == "" {
 		t.List[i].Check = "Done"
 		t.List[i].Time = time.Now()
 	}
+
 	t.Save()
 }
 func (t *TodoList) UnCheck(i int) {
-	if t.List[i].Check == "Done" {
-		t.List[i].Check = ""
+	i = i - 1
+	if t.List[i].Check == "Done" || t.List[i].Check == "" {
+		t.List[i].Check = "Pending"
 		t.List[i].Time = time.Now()
 	}
+
 	t.Save()
 }
 
 // get
 func (t *TodoList) Get() {
-	for _, l := range t.List {
-		fmt.Println(l)
+	fmt.Printf("%-4s %-45s %-25s %-10s\n", "ID", "TASK", "CREATED", "CHECK")
+	fmt.Println(strings.Repeat("-", 100))
 
+	for _, item := range t.List {
+		fmt.Printf(
+			"%-4d %-45s %-25s %-10s\n",
+			item.Id,
+			truncate(item.Task, 45),
+			item.Time.Format("02 Jan 2006, 03:04 PM"),
+			item.Check,
+		)
 	}
 }
 
@@ -48,13 +61,14 @@ func (t *TodoList) Add(task string) {
 		Id:    len(t.List) + 1,
 		Task:  task,
 		Time:  time.Now(),
-		Check: "",
+		Check: "Pending",
 	}
 	t.List = append(t.List, p)
 	t.Save()
 
 }
 func (t *TodoList) Delete(i int) {
+	i = i - 1
 	t.List = slices.Delete(t.List, i, i+1)
 	for j := range len(t.List) {
 		t.List[j].Id = j + 1
@@ -64,6 +78,7 @@ func (t *TodoList) Delete(i int) {
 
 }
 func (t *TodoList) Update(i int, task string) {
+	i = i - 1
 	t.List[i].Task = task
 	t.List[i].Time = time.Now()
 	t.Save()
@@ -95,4 +110,21 @@ func (t *TodoList) Load() error {
 	}
 
 	return json.Unmarshal(data, &t.List) //if none of the case from above then unmarshal the data byte to list struct
+}
+
+// func (t Todo) String() string {
+// 	return fmt.Sprintf(
+// 		"[%d] %s\n    Created: %s  Check:%s",
+// 		t.Id,
+// 		t.Task,
+// 		t.Time.Format("02 Jan 2006, 03:04 PM"),
+// 		t.Check,
+// 	)
+// }
+
+func truncate(s string, max int) string {
+	if len(s) <= max {
+		return s
+	}
+	return s[:max-3] + "..."
 }
